@@ -7,9 +7,10 @@ import (
 )
 
 type KellyResult struct {
-	WinProbability float64
-	NetOdds        float64
-	KellyFraction  float64
+	WinProbability    float64
+	NetOdds           float64
+	KellyFraction     float64
+	HalfKellyFraction float64
 }
 
 func CalculateKelly(winProbability, netOdds float64) KellyResult {
@@ -17,9 +18,10 @@ func CalculateKelly(winProbability, netOdds float64) KellyResult {
 	kellyFraction := (netOdds*winProbability - lossProbability) / netOdds
 
 	return KellyResult{
-		WinProbability: winProbability,
-		NetOdds:        netOdds,
-		KellyFraction:  kellyFraction,
+		WinProbability:    winProbability,
+		NetOdds:           netOdds,
+		KellyFraction:     kellyFraction,
+		HalfKellyFraction: kellyFraction / 2,
 	}
 }
 
@@ -33,15 +35,16 @@ func RenderKelly(result KellyResult) string {
 	netOdds := fmt.Sprintf("%s %s", keyStyle.Render("Net Odds:"), valStyle.Render(fmt.Sprintf("%.2f", result.NetOdds)))
 	kellyFraction := fmt.Sprintf("%s %s", keyStyle.Render("Kelly Fraction:"), valStyle.Render(fmt.Sprintf("%.2f", result.KellyFraction)))
 
-	summary := RenderKellySummary(result.KellyFraction)
+	summary := RenderKellySummary(result)
 
 	return fmt.Sprintf("%s\n%s\n%s", winProb, netOdds, kellyFraction) + "\n\n" + summary
 }
 
-func RenderKellySummary(kellyFraction float64) string {
-	if kellyFraction > 0 {
+func RenderKellySummary(result KellyResult) string {
+	if result.KellyFraction > 0 {
 		style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("2"))
-		return style.Render(fmt.Sprintf("Recommended bet size is %.2f%% of your bankroll.", kellyFraction*100))
+		summary := fmt.Sprintf("Recommended bet size is %.2f%% (Half-Kelly: %.2f%%) of your bankroll.", result.KellyFraction*100, result.HalfKellyFraction*100)
+		return style.Render(summary)
 	}
 	style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("3"))
 	return style.Render("The Kelly Criterion suggests not to bet.")
