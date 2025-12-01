@@ -5,8 +5,8 @@ A command-line toolkit for essential financial calculations.
 `fx` is a simple and efficient tool for developers and anyone interested in finance, providing quick calculations for compound growth and Kelly Criterion.
 
 ## Demo
-![Pulse Screenshot](assets/screenshot.png)
 
+![fx Screenshot](assets/screenshot.png)
 
 ## Installation
 
