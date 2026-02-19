@@ -7,7 +7,7 @@ import (
 )
 
 func RenderRule72(result Rule72Result) string {
-	labelStyle := lipgloss.NewStyle().Bold(true).Align(lipgloss.Right).Width(22).Render
+	labelStyle := lipgloss.NewStyle().Bold(true).Align(lipgloss.Right).Width(30).Render
 	mainStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("2")).Bold(true).Render
 	dimStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("7")).Render
 

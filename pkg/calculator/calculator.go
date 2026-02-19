@@ -1,8 +1,6 @@
 package calculator
 
 import (
-	"math"
-
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 	"golang.org/x/text/language"
@@ -24,6 +22,14 @@ func Calculate(principal, contribution, growth float64, years int, rate, inflati
 	totalInterest := 0.0
 	currentContribution := contribution
 
+	// Real rate of return using Fisher equation: (1+nominal)/(1+inflation) - 1
+	// This properly accounts for contributions made at different points in time.
+	realRate := 0.0
+	if inflation > 0 {
+		realRate = (1+rate/100)/(1+inflation/100) - 1
+	}
+	realBalance := principal
+
 	for i := 1; i <= years; i++ {
 		totalContributions += currentContribution
 		interest := balance * (rate / 100)
@@ -32,10 +38,12 @@ func Calculate(principal, contribution, growth float64, years int, rate, inflati
 		// Add the current year's contribution at the end of the year
 		balance += currentContribution
 
-		// Real (inflation-adjusted) value: balance / (1 + inflation%)^year
+		// Real (inflation-adjusted) value using real rate of return.
+		// Contributions are kept in today's dollars; only the growth rate is adjusted.
 		realValue := 0.0
 		if inflation > 0 {
-			realValue = balance / math.Pow(1+inflation/100, float64(i))
+			realBalance = realBalance*(1+realRate) + currentContribution
+			realValue = realBalance
 		}
 
 		results = append(results, YearResult{
@@ -95,7 +103,7 @@ func RenderTable(results []YearResult, inflation float64) string {
 				return lipgloss.NewStyle().Foreground(lipgloss.Color("4")).Padding(0, 1).Align(lipgloss.Right)
 			case 4:
 				if numCols == 5 {
-					return lipgloss.NewStyle().Foreground(lipgloss.Color("5")).Padding(0, 1).Align(lipgloss.Right)
+					return lipgloss.NewStyle().Foreground(lipgloss.Color("7")).Padding(0, 1).Align(lipgloss.Right)
 				}
 				return lipgloss.NewStyle().Padding(0, 1).Align(lipgloss.Right)
 			default:
