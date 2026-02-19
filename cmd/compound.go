@@ -16,6 +16,7 @@ var (
 	growth       float64
 	years        int
 	rate         float64
+	inflation    float64
 )
 
 // compoundCmd represents the compound command
@@ -25,8 +26,8 @@ var compoundCmd = &cobra.Command{
 	Long: `Calculates the future value of an investment with compound growth
 and displays a year-by-year breakdown of the growth in a formatted table.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		results, finalBalance := calculator.Calculate(float64(principal), float64(contribution), growth, years, rate)
-		fmt.Println(calculator.RenderTable(results))
+		results, finalBalance := calculator.Calculate(float64(principal), float64(contribution), growth, years, rate, inflation)
+		fmt.Println(calculator.RenderTable(results, inflation))
 		fmt.Println(calculator.RenderSummary(finalBalance, years))
 	},
 }
@@ -39,6 +40,7 @@ func init() {
 	compoundCmd.Flags().Float64VarP(&growth, "growth", "g", 0, "The annual percentage increase in the contribution (e.g., enter 3 for 3%)")
 	compoundCmd.Flags().IntVarP(&years, "years", "y", 0, "The total investment duration in years (required)")
 	compoundCmd.Flags().Float64VarP(&rate, "rate", "r", 0, "The expected annual rate of return (e.g., enter 8 for 8%)")
+	compoundCmd.Flags().Float64VarP(&inflation, "inflation", "i", 0, "Expected annual inflation rate to show real value column (e.g., enter 3 for 3%)")
 
 	if err := compoundCmd.MarkFlagRequired("principal"); err != nil {
 		fmt.Println(err)
