@@ -14,6 +14,9 @@ The project uses the following main technologies:
 The current features include:
 - **Compound Growth Calculation**: The `compound` command calculates the future value of an investment with compound growth and displays a year-by-year breakdown.
 - **Kelly Criterion Calculation**: The `kelly` command calculates the optimal bet size based on the Kelly Criterion formula.
+- **Loan Amortization**: The `loan` command calculates monthly payments and generates an amortization schedule for loans or mortgages.
+- **Present Value**: The `pv` command calculates the present value of a future sum of money.
+- **Rule of 72**: The `rule72` command estimates how long it takes for an investment to double in value.
 - **Money Shorthand**: The tool accepts money values in shorthand, such as `10k` for 10,000, `1m` for 1,000,000, and `1b` for 1,000,000,000.
 
 ## Building and Running
